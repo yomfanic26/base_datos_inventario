@@ -1,0 +1,24 @@
+package com.krakedev.servicios;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
+import com.krakedev.entidades.Cliente;
+
+@Path("customers")
+public class ServicioClientes {
+	
+	@Path("m1")
+	@GET
+	public String saludar () {
+		return "Hola Mundo Rest Web Service";
+	}
+	
+	@Path("buscar")
+	@GET
+	public Cliente buscar () {
+		Cliente cliente = new Cliente ("0803473784","Jonathan");;
+		return cliente;
+	}
+
+}

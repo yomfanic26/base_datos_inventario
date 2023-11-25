@@ -1,0 +1,27 @@
+package com.krakedev.servicios;
+
+import javax.enterprise.inject.Produces;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+
+import com.krakedev.entidades.Cliente;
+
+@Path("customers")
+public class ServicioClientes {
+	
+	@Path("m1")
+	@GET
+	public String saludar () {
+		return "Hola Mundo Rest Web Service";
+	}
+	
+	@Path("buscar")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Cliente buscar () {
+		Cliente cliente = new Cliente ("0803473784","Jonathan");
+		return cliente;
+	}
+
+}

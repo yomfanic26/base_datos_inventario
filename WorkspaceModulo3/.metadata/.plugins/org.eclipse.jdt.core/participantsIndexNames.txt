@@ -1,0 +1,3 @@
+INDEX VERSION 1.131
+C:\Users\Personal\modulo3\WorkspaceModulo3\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1012163473.index
+\inventarios\src\main\java

@@ -1,0 +1,176 @@
+package com.krakedev.persistencia;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.krakedev.entidades.Cliente;
+import com.krakedev.execepciones.KrakedevEception;
+import com.krakedev.utils.ConexcionBDD;
+
+public class ClientesBDD {
+
+	public void insertar(Cliente cliente) throws KrakedevEception {
+		Connection con = null;
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			PreparedStatement ps = con
+					.prepareStatement("INSERT INTO clientes (cedula, nombre, numeroHijos) VALUES (?, ?, ?)");
+
+			ps.setString(1, cliente.getCedula());
+			ps.setString(2, cliente.getNombre());
+			ps.setInt(3, cliente.getNumeroHijos());
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al insertar el clienteDetalle: " + e.getMessage());
+		} catch (KrakedevEception e) {
+			throw e;
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+
+	public void actualizar(Cliente cliente) throws KrakedevEception {
+		Connection con = null;
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			PreparedStatement ps = con
+					.prepareStatement("UPDATE clientes SET nombre = ?, numeroHijos = ? WHERE cedula = ?");
+
+			ps.setString(1, cliente.getNombre());
+			ps.setInt(2, cliente.getNumeroHijos());
+			ps.setString(3, cliente.getCedula());
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al actualizar el clienteDetalle: " + e.getMessage());
+		} catch (KrakedevEception e) {
+			throw e;
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+
+	}
+
+	public ArrayList<Cliente> recuperarTodos() throws KrakedevEception {
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Cliente cliente = null;
+
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			ps = con.prepareStatement("select cedula,nombre,numeroHijos from clientes");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				String cedula = rs.getString("cedula");
+				String nombre = rs.getString("nombre");
+				int numeroHijos = rs.getInt("numeroHijos");
+				cliente = new Cliente(cedula, nombre, numeroHijos);
+				clientes.add(cliente);
+
+			}
+
+			;
+		} catch (KrakedevEception e) {
+			e.printStackTrace();
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al consultar. Detalle: " + e.getMessage());
+
+		}
+		return clientes;
+
+	}
+
+	public Cliente buscarPorPK(String cedulaBusqueda) throws KrakedevEception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Cliente cliente = null;
+
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			ps = con.prepareStatement("select cedula,nombre,numeroHijos from clientes where cedula=?");
+			ps.setString(1, cedulaBusqueda);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				String cedula = rs.getString("cedula");
+				String nombre = rs.getString("nombre");
+				int numeroHijos = rs.getInt("numeroHijos");
+				cliente = new Cliente(cedula, nombre, numeroHijos);
+
+			}
+
+			;
+		} catch (KrakedevEception e) {
+			e.printStackTrace();
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al consultar. Detalle: " + e.getMessage());
+
+		}
+		return cliente;
+
+	}
+
+	// buscar por numero de hijos
+
+	public ArrayList<Cliente> recuperarHijos(int hijos) throws KrakedevEception {
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Cliente cliente = null;
+
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			ps = con.prepareStatement("select cedula,nombre,numeroHijos from clientes where numeroHijos>=?");
+			ps.setInt(1, hijos);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				String cedula = rs.getString("cedula");
+				String nombre = rs.getString("nombre");
+				int numeroHijos = rs.getInt("numeroHijos");
+				cliente = new Cliente(cedula, nombre, numeroHijos);
+				clientes.add(cliente);
+
+			}
+
+			;
+		} catch (KrakedevEception e) {
+			e.printStackTrace();
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al consultar. Detalle: " + e.getMessage());
+
+		}
+		return clientes;
+
+	}
+
+}

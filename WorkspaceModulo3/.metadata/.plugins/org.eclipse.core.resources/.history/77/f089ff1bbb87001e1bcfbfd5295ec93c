@@ -1,0 +1,97 @@
+package com.krakedev.persistencia;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.krakedev.entidades.Cliente;
+import com.krakedev.execepciones.KrakedevEception;
+import com.krakedev.utils.ConexcionBDD;
+
+public class ClientesBDD {
+
+	public void insertar(Cliente cliente) throws KrakedevEception {
+		Connection con = null;
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			PreparedStatement ps = con
+					.prepareStatement("INSERT INTO clientes (cedula, nombre, numeroHijos) VALUES (?, ?, ?)");
+
+			ps.setString(1, cliente.getCedula());
+			ps.setString(2, cliente.getNombre());
+			ps.setInt(3, cliente.getNumeroHijos());
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al insertar el clienteDetalle: "+e.getMessage());
+		} catch (KrakedevEception e) {
+			throw e;
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+
+	public void actualizar(Cliente cliente) throws KrakedevEception {
+		Connection con = null;
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			PreparedStatement ps = con
+					.prepareStatement("UPDATE clientes SET nombre = ?, numeroHijos = ? WHERE cedula = ?");
+
+			ps.setString(1, cliente.getNombre());
+			ps.setInt(2, cliente.getNumeroHijos());
+			ps.setString(3, cliente.getCedula());
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al actualizar el clienteDetalle: "+e.getMessage());
+		} catch (KrakedevEception e) {
+			throw e;
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+
+	}
+	
+	
+	public ArrayList<Cliente> recuperarTodos() throws KrakedevEception{
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+		Connection con = null;
+		PreparedStatement ps = null;
+
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			ps=con.prepareStatement("select cedula,nombre,numeroHijos from clientes");
+
+		} catch (KrakedevEception e) {
+			e.printStackTrace();
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new  KrakedevEception ("Error al consultar. Detalle: "+e.getMessage());
+
+		}
+		return clientes;
+		
+		
+	}
+
+}

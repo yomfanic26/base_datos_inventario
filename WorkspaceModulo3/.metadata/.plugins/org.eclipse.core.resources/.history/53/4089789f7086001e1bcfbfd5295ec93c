@@ -1,0 +1,21 @@
+package com.krakedev.persistencia;
+
+import java.sql.Connection;
+
+import com.krakedev.entidades.Cliente;
+import com.krakedev.utils.ConexcionBDD;
+
+public class ClientesBDD {
+	
+	public void insertar (Cliente cliente) {
+		Connection con = ConexcionBDD.ObtenerConexion();
+		if(con!=null) {
+			System.out.println("CONECTATO");
+		}else {
+			System.out.println("ERROR AL OBTENER CONEXION");
+
+		}
+	}
+
+}
+

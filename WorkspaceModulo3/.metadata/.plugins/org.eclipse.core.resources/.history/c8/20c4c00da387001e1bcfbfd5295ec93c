@@ -1,0 +1,23 @@
+package com.krakedev.persistencia;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.krakedev.entidades.Cliente;
+import com.krakedev.utils.ConexcionBDD;
+
+public class ClientesBDD {
+
+	public void insertar(Cliente cliente) {
+		Connection con = ConexcionBDD.ObtenerConexion();
+		try {
+			PreparedStatement ps = 
+					con.prepareStatement("inser into clientes (cedula,nombre,numeroHijos values (?,?,?)");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+}
