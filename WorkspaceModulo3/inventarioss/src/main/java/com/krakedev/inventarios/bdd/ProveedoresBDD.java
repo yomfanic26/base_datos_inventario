@@ -13,7 +13,7 @@ import com.krakedev.inventarios.utils.ConexcionBDD;
 
 public class ProveedoresBDD {
 
-	// Recuperar todos
+	// Recuperar todos los provedores
 
 	public ArrayList<Proveedor> buscar(String subcadena) throws KrakedevEception {
 		ArrayList<Proveedor> proveedores = new ArrayList<Proveedor>();
