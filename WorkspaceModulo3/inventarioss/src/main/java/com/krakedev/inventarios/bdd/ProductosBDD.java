@@ -84,25 +84,27 @@ public class ProductosBDD {
 	}
 
 	// insertar proveedor
-	public void insertar(Proveedor proveedor) throws KrakedevEception {
+	public void insertar(Producto producto) throws KrakedevEception {
 		Connection con = null;
 		try {
 			con = ConexcionBDD.ObtenerConexion();
 			PreparedStatement ps = con.prepareStatement(
-					"INSERT INTO proveedores (codigo_prov,tipo_documento,nombre,telefono,correo,direccion) VALUES (?,?,?,?,?,?)");
+					"INSERT INTO productos (nombre, unidad_medida, precio_venta, tiene_iva, coste, categoria, stock)"
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-			ps.setString(1, proveedor.getCodigo_prov());
-			ps.setString(2, proveedor.getTipo_documento().getCodigo());
-			ps.setString(3, proveedor.getNombre());
-			ps.setString(4, proveedor.getTelefono());
-			ps.setString(5, proveedor.getCorreo());
-			ps.setString(6, proveedor.getDireccion());
+			ps.setString(1, producto.getNombre());
+			ps.setString(2, producto.getUnidadMedida().getNombre());
+			ps.setBigDecimal(3, producto.getPrecio());
+			ps.setBoolean(4, producto.isTieneIva());
+			ps.setBigDecimal(5, producto.getCoste());
+			ps.setInt(6, producto.getCategoria().getCodigo_cat());
+			ps.setInt(7, producto.getStock());
 
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new KrakedevEception("Error al insertar el proveedor Detalle: " + e.getMessage());
+			throw new KrakedevEception("Error al insertar el producto Detalle: " + e.getMessage());
 		} catch (KrakedevEception e) {
 			throw e;
 		} finally {

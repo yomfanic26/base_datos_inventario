@@ -46,11 +46,11 @@ public class ServiciosProductos {
 	@POST
 	// recibir un cliente en formato json
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response insertar(Proveedor proveedor) {
-		System.out.println("<<<<<<<" + proveedor);
-		ProveedoresBDD cli = new ProveedoresBDD();
+	public Response insertar(Producto producto) {
+		System.out.println("<<<<<<<" + producto);
+		ProductosBDD pro = new ProductosBDD();
 		try {
-			cli.insertar(proveedor);
+			pro.insertar(producto);
 			// devuelve 200
 			return Response.ok().build();
 
