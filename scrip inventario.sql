@@ -215,7 +215,7 @@ VALUES
 ------TABLA CABECERA PEDIDO-----
 drop table if exists cabeceras_pedido CASCADE;
 Create table cabeceras_pedido (
-	numero int not null,
+	numero serial not null,
 	proveedor varchar (13) not null,
 	fecha date not null,
 	estado char (1) not null,
@@ -239,9 +239,9 @@ Create table detalles_pedido (
 	codigo serial not null,
 	cabecera_pedido int not null,
 	producto int not null,
-	canitidad int not null,
-	subtotal money not null,
+	cantidad int not null,
 	cantidad_recibida int not null,
+	subtotal money not null,
 	constraint detalles_pedido_pk primary key (codigo),
 	constraint detalle_producto_fk foreign key (producto)
 	references productos (codigo_pro),
@@ -250,7 +250,7 @@ Create table detalles_pedido (
 );
 
  --insertar--
-INSERT INTO detalles_pedido (cabecera_pedido,producto,canitidad,subtotal,cantidad_recibida)
+INSERT INTO detalles_pedido (cabecera_pedido,producto,cantidad,subtotal,cantidad_recibida)
 VALUES 
   (1,1,100,37.29,100),
   (1,4,50,11.8,50),
