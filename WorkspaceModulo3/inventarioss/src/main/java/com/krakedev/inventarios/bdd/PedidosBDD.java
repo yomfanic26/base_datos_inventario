@@ -109,12 +109,10 @@ public class PedidosBDD {
 				psDetalle.setInt(4, 0);
 				BigDecimal pv = det.getProducto().getPrecio();
 				BigDecimal cantidad = new BigDecimal(det.getCantidad());
-				pv.multiply(cantidad);
 				BigDecimal Subtotal = pv.multiply(cantidad);
 				psDetalle.setBigDecimal(5, Subtotal);
 				psDetalle.executeUpdate();
 			}
-
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,4 +131,62 @@ public class PedidosBDD {
 		}
 	}
 
+	// insertar proveedor
+	public void actualizar(Pedido pedido) throws KrakedevEception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		PreparedStatement psDetalle = null;
+
+		// fecha del sitema
+		Date fechaActual = new Date();
+		// covierte fecha de sistem en mili segundos de tipo sql dare
+		java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+		ResultSet rsClave = null;
+
+		try {
+			con = ConexcionBDD.ObtenerConexion();
+			ps = con.prepareStatement("update  cabeceras_pedido set estado='R' where numero=?");
+
+			ps.setInt(1, pedido.getCodigo());
+
+			ps.executeUpdate();
+
+			// recupero todo los detalles del pedido
+			ArrayList<DetallePedido> detallesPedidos = pedido.getDetalles();
+			// barro los detalle y hago un insert
+
+			DetallePedido det;
+			for (int i = 0; i < detallesPedidos.size(); i++) {
+				det = detallesPedidos.get(i);
+				psDetalle = con
+						.prepareStatement("UPDATE detalles_pedido SET cantidad_recibida=?, subtotal=? WHERE codigo=?");
+				psDetalle.setInt(1, det.getCantidad_recibida());
+
+				BigDecimal pv = det.getProducto().getPrecio();
+				BigDecimal cantidad = new BigDecimal(det.getCantidad_recibida());
+				BigDecimal Subtotal = pv.multiply(cantidad);
+				psDetalle.setBigDecimal(2, Subtotal);
+				psDetalle.setInt(3, det.getCodigo());
+
+				psDetalle.executeUpdate();
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new KrakedevEception("Error al actualizar el pedido Detalle: " + e.getMessage());
+		} catch (KrakedevEception e) {
+			throw e;
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+
+	}
 }
