@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -131,16 +132,19 @@ public class PedidosBDD {
 		}
 	}
 
-	// insertar proveedor
+	// avtualizar pedido
 	public void actualizar(Pedido pedido) throws KrakedevEception {
 		Connection con = null;
 		PreparedStatement ps = null;
 		PreparedStatement psDetalle = null;
+		PreparedStatement psHis = null;
+		
+		Date fechaActual = new Date ();
+		Timestamp fechaHoraActual = new Timestamp(fechaActual.getTime());
 
-		// fecha del sitema
-		Date fechaActual = new Date();
-		// covierte fecha de sistem en mili segundos de tipo sql dare
-		java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+		
+
+
 		ResultSet rsClave = null;
 
 		try {
@@ -153,7 +157,6 @@ public class PedidosBDD {
 
 			// recupero todo los detalles del pedido
 			ArrayList<DetallePedido> detallesPedidos = pedido.getDetalles();
-			// barro los detalle y hago un insert
 
 			DetallePedido det;
 			for (int i = 0; i < detallesPedidos.size(); i++) {
@@ -167,8 +170,24 @@ public class PedidosBDD {
 				BigDecimal Subtotal = pv.multiply(cantidad);
 				psDetalle.setBigDecimal(2, Subtotal);
 				psDetalle.setInt(3, det.getCodigo());
+				
 
 				psDetalle.executeUpdate();
+				
+				
+				//
+				psHis = con
+						.prepareStatement("INSERT INTO histotial_stock (fecha,referencia,producto,cantidad)"
+								+ "VALUES(?,?,?,?)");
+				
+				psHis.setTimestamp(1, fechaHoraActual);
+				psHis.setString(2, "Pedido "+pedido.getCodigo());
+				psHis.setInt(3, det.getProducto().getCodigo());
+				psHis.setInt(4, det.getCantidad_recibida());
+ 
+				psHis.executeUpdate();
+
+				
 
 			}
 
